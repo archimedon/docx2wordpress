@@ -6,9 +6,8 @@ A serverside application, customized for our particular CMS needs, specifically,
 
 ## Overview
 
-A small application, built for Linux. providing just enough flexibility and functionality to get the job done. Currently running as a cronjob. With a little elbow, it can be converted into a daemon or DirectoryWatchService.
+A small application - more a utility, built for Linux. providing just enough flexibility and functionality to get the job done. It is currently running as a cronjob but with a little elbow, it can be converted into a daemon or DirectoryWatchService.
 
-(Depends on [WP-CLI](https://github.com/wp-cli/wp-cli) ...  for talking to Wordpress platform.)
 
 ## Publisher/Author Usage
 
@@ -34,11 +33,16 @@ Directory services, in this use-case, are by ACL over webDav. My user has access
 
 ![Categorize and add featured image](/docs/imgs/CopyCategories.png)
 
-
-
 # How to build
 
-Connect to Linux shell
+Connect to Linux shell.
+
+## Requires:
+
+* Maven
+* Java 8
+* Linux (BASH)
+* Wordpress and WP-CLI
 
 ## Build
 
@@ -47,20 +51,35 @@ Connect to Linux shell
 ## Run
 
 ### Setup
+
 `java -cp target/converter.jar com.rasajournal.DocxConvSetup WordPressHome WatchedDirectory`
 
 This Creates the category files and and author directories and sets file permissions in an attempt to prevent accidental deletion - Note. this depends on the _current_ user's access privilege.
 
-It may be helpful to run setup in a weekly cronjob, depending on the rate at which you add categories or authors.
+It may be helpful to run setup in a weekly cronjob depending on the frequency that new categories or authors are added.
 
 ### Convert
 
 `java -jar target/converter.jar WordPressHome WatchedDirectory`
 
-- Find *.docx articles
-- Sort out the author and applicable categories
-- Post to WordPress
+* Find *.docx articles
+* Sort out the author and applicable categories
+* Post to WordPress
 
 Runs in a cron. Articles have to be in before publish times.
 
+## TODO
+
+* Extern and integrate configuration with WP-configuration
+* Add upload of Video(s) with article
+* Enable auto-creation of authors
+* Enable remote POSTing
+* Implement a strategy to give Publisher control over Publish time/date
+
+## Credits
+
+In addition to the libraries mentioned in the POM, credit for tackling the more challenging aspects goes to:
+
+* [WP-CLI](https://github.com/wp-cli/wp-cli) - for talking to Wordpress
+* [Mammoth Converter](https://github.com/mwilliamson/java-mammoth  - for docx extraction API
 
