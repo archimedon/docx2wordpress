@@ -12,9 +12,11 @@ A small application, built for Linux. providing just enough flexibility and func
 
 ## Publisher/Author Usage
 
+![Generated and Watched directories]('/docs/imgs/Generated and Watched Directories.png')
+
 During the setup of Docx2Wordpress, author directories are created (or updated) based on existing WP-authors. A set of files representing the available *categories* are also created. 
 
-![Generated and Watched directories](https://www.screencast.com/t/lxrEbQYMgX5S)
+![Categories]('/docs/imgs/Generated Available Categories Definition.png')
 
 Directory services, in this use-case, are by ACL over webDav. My user has access to all test accounts however, in practice authors only have access their own folders.
 
@@ -30,7 +32,9 @@ Directory services, in this use-case, are by ACL over webDav. My user has access
 3. Copy article-dir to the author's folder
 4. Copy the files representing the desired categories
 
-![Categorize and add featured image](https://www.screencast.com/t/vtMxpnDc7)
+![Categorize and add featured image](/docs/imgs/CopyCategories.png)
+
+
 
 # How to build
 
