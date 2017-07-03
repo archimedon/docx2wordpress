@@ -47,7 +47,7 @@ Connect to Linux shell
 ## Run
 
 ### Setup
-`java -cp target/converter.jar com.rasajournal.DocxConvSetup '<WordPressHome>' '<WatchedDirectory>'
+`java -cp target/converter.jar com.rasajournal.DocxConvSetup WordPressHome WatchedDirectory
 
 This Creates the category files and and author directories and sets file permissions in an attempt to prevent accidental deletion - Note. this depends on the _current_ user's access privilege.
 
@@ -55,7 +55,7 @@ It may be helpful to run setup in a weekly cronjob, depending on the rate at whi
 
 ### Convert
 
-`java -jar target/converter.jar '<WordPressHome>' '<WatchedDirectory>'
+`java -jar target/converter.jar WordPressHome WatchedDirectory
 
 - Find *.docx articles
 - Sort out the author and applicable categories
