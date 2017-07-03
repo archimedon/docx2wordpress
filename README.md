@@ -81,5 +81,5 @@ Runs in a cron. Articles have to be in before publish times.
 In addition to the libraries mentioned in the POM, credit for tackling the more challenging aspects goes to:
 
 * [WP-CLI](https://github.com/wp-cli/wp-cli) - for talking to Wordpress
-* [Mammoth Converter](https://github.com/mwilliamson/java-mammoth  - for docx extraction API
+* [Mammoth Converter](https://github.com/mwilliamson/java-mammoth)  - for docx extraction API
 
