@@ -16,14 +16,17 @@ import java.util.Set;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rasajournal.entity.Author;
+import com.rasajournal.entity.Category;
 
 /**
- * Create or update the operational space: Author folders and available Categories. 
+ * Create or update the operational space: Author folders and available Categories.
  */
 public class DocxConvSetup {
-    
+
     static final String authorDataFile = "author.json";
     static final String categoryDataFile = "category.json";
+    public static final String completedDataFilen = ".completed.json";
 
     public final Path categoriesDir;
     public final Path authorsDir;
@@ -31,7 +34,7 @@ public class DocxConvSetup {
     public final ObjectMapper objectMapper;
     public final ConverterConfig config;
     public final WPTask taskMan;
-    
+
     private final Set<PosixFilePermission> perms = PosixFilePermissions.fromString("r-xr-xr--");
 
 
@@ -46,6 +49,17 @@ public class DocxConvSetup {
 
     public static void main(String[] args) throws IOException {
 
+//        OptionParser parser = new OptionParser( "fc:q::" );
+//
+//        OptionSet options = parser.parse( "-f", "-c", "foo", "-q" );
+//
+//        assertTrue( options.has( "f" ) );
+//
+//        assertTrue( options.has( "c" ) );
+//        assertTrue( options.hasArgument( "c" ) );
+//        assertEquals( "foo", options.valueOf( "c" ) );
+
+
 	final DocxConvSetup dcs = new DocxConvSetup( args[0], args[1]  ) ;
 	Files.setPosixFilePermissions(dcs.categoriesDir, PosixFilePermissions.fromString("rwxr-xr--"));
 	dcs.initAuthors();
@@ -53,7 +67,7 @@ public class DocxConvSetup {
 	Files.setPosixFilePermissions(dcs.categoriesDir, PosixFilePermissions.fromString("r-xr-xr--"));
 //	dcs.mkReadOnlyDir(dcs.categoriesDir);
     }
-    
+
     public List<Author> getAuthors() throws IOException {
 	final String authorJson = taskMan.getUsers();
 	return objectMapper.readValue(authorJson, new TypeReference<List<Author>>(){});
@@ -74,46 +88,42 @@ public class DocxConvSetup {
 	}
 	return null;
     }
-    
+
     public void mkReadOnlyDir(Path aDir) throws IOException {
-	
 	try (DirectoryStream<Path> stream = Files.newDirectoryStream(aDir, entry -> Files.isDirectory(entry))) {
 	    for (Path dir : stream)  {
 		try (DirectoryStream<Path> innerStream = Files.newDirectoryStream(dir, entry -> Files.isDirectory(entry))) {
 		    for (Path innerDir : innerStream) {
 			mkReadOnlyDir(innerDir);
-			System.out.println("Set perm: " + String.valueOf(innerDir));
 			Files.setPosixFilePermissions(innerDir, perms);
 		    }
 		}
-		System.out.println("Set perm: " + String.valueOf(dir));
 		Files.setPosixFilePermissions(dir, perms);
 	    }
 	}
     }
-    
+
     private void initCategories() {
-	
+
 	final Map<Long, Category>  catmap = getCategories();
 	final List<Category> sortedCats = new LinkedList<Category>(catmap.values());
-	
+
 	sortedCats.sort((x, y) -> {
 		int ret = x.parent.compareTo(y.parent);
 		return ret == 0 ? x.termId.compareTo(y.termId) : ret;
 	});
-	
+
 	sortedCats.forEach( category -> {
 
 	    String filename = category.getParent().longValue() > 0
 		    	? "[ " + catmap.get(category.getParent()) + " : "  +  category.getName() + " ] " +  categoryDataFile
 		    	: "[ "  +  category.getName() + " ] " +  categoryDataFile;
-	    
+
 	    Path tmp = categoriesDir.resolve(filename);
 
 	    try {
 		objectMapper.writeValue(tmp.toFile() , category);
 		Files.setPosixFilePermissions(tmp, PosixFilePermissions.fromString("rwxrwxrwx"));
-//		Files.setPosixFilePermissions(categoryFilePath.getParent(), PosixFilePermissions.fromString("rwxrwxrwx"));
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    };

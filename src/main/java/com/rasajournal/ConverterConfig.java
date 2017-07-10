@@ -17,11 +17,11 @@ public class ConverterConfig {
     public final Path platformPath;
     public final Path scratchPath;
     public final String timeStampString;
-    
+
     public ConverterConfig(String platformDirPath, String watchDirPath) throws IOException {
-	
+
 	this.timeStampString = new Date().getTime() + "";
-	
+
 	for (Path requiredDir : new Path[] {
 		this.watchPath = Paths.get(watchDirPath),
 		this.platformPath = Paths.get(platformDirPath),
@@ -30,10 +30,8 @@ public class ConverterConfig {
 	    Files.createDirectories(requiredDir);
 	}
 	System.err.println("New ConverterConfig scratchPath: " + scratchPath );
-	
-	
     }
-    
+
     public static String getScratchDirPath() {
         return scratchDirPath;
     }

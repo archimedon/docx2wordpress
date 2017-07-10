@@ -1,4 +1,4 @@
-package com.rasajournal;
+package com.rasajournal.entity;
 
 import java.util.List;
 import java.util.Map;
@@ -15,16 +15,16 @@ public interface ArticleMeta {
 	NAVMENUITEM("nav_menu_item"),
 	CUSTOMCSS("custom_css");
 
-	
+
 	private final String cmdVal;
-	
+
 	PostType(String cliarg) {
 	    this.cmdVal = cliarg;
 	}
-	
+
 	public String type() { return cmdVal; }
     }
-    
+
     public static enum PostStatus
     {
 	PUBLISH("publish"),		// A published post or page
@@ -35,20 +35,20 @@ public interface ArticleMeta {
 	PRIVATE("private"),		// Not visible to users who are not logged in
 	INHERIT("inherit"),		// A revision. see get_children.
 	TRASH("trash");			// Post is in trash
-	
-	
+
+
 	private final String cmdVal;
-	
+
 	PostStatus(String cliarg) {
 	    this.cmdVal = cliarg;
 	}
-	
+
 	public String status() { return cmdVal; }
     }
 
     public PostType getPostType();
     public PostStatus getPostStatus();
-    
+
     public ArticleMeta addMeta(String k, String v);
 
     public Map<String, String> getPostMeta();

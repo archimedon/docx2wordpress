@@ -1,4 +1,4 @@
-package com.rasajournal;
+package com.rasajournal.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,10 +10,10 @@ public class Category {
 
     @JsonProperty(value = "term_id")
     public Long termId;
-    
+
     @JsonProperty
     public Long parent;
-    
+
     @JsonProperty
     public String name;
 
@@ -78,5 +78,5 @@ public class Category {
     public String toString() {
 	return name;
     }
-    
+
 }

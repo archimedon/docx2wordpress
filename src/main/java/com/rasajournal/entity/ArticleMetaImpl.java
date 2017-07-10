@@ -1,10 +1,6 @@
-package com.rasajournal;
+package com.rasajournal.entity;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,9 +10,9 @@ public class ArticleMetaImpl implements ArticleMeta {
 
     private PostType postType = ArticleMeta.PostType.POST;
     private PostStatus postStatus = ArticleMeta.PostStatus.PUBLISH;
-    
-    private final Author author;  
-    private final List<Category> categories;  
+
+    private final Author author;
+    private final List<Category> categories;
     private final Map<String, String> postMeta;
     /*
      * post_author' => $user_id,
@@ -78,15 +74,12 @@ public class ArticleMetaImpl implements ArticleMeta {
 	return m;
     }
 
-
-
     /**
      * @return the postType
      */
     @Override public PostType getPostType() {
         return postType;
     }
-
 
     /**
      * @param postType the postType to set
@@ -96,14 +89,12 @@ public class ArticleMetaImpl implements ArticleMeta {
         return this;
     }
 
-
     /**
      * @return the postStatus
      */
     @Override public PostStatus getPostStatus() {
         return postStatus;
     }
-
 
     /**
      * @param postStatus the postStatus to set
@@ -113,14 +104,12 @@ public class ArticleMetaImpl implements ArticleMeta {
         return this;
     }
 
-
     /**
      * @return the author
      */
     public Author getAuthor() {
         return author;
     }
-
 
     @Override
     public Optional<List<Long>> getPostCategories() {
@@ -137,7 +126,7 @@ public class ArticleMetaImpl implements ArticleMeta {
 		str
 	);
     }
-    
+
     public Map<String, String> getPostMeta() {
 	return postMeta;
     }
@@ -147,5 +136,5 @@ public class ArticleMetaImpl implements ArticleMeta {
 	postMeta.put(k,v);
 	return this;
     }
-    
+
 }

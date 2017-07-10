@@ -46,9 +46,10 @@ import org.zwobble.mammoth.Result;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
+import com.rasajournal.entity.ArticleMeta;
 
 public class DocConverter {
-    
+
     private final WPTask taskMan;
     private final ConverterConfig config;
     private final DocumentBuilder builder;
@@ -60,12 +61,12 @@ public class DocConverter {
     final String xhtmlWrapEnd = "</span>";
     public final Path categoriesDir;
     public final Path authorsDir;
-    
+
     public String title;
     public String featuredImage;
-    
+
     public DocConverter (ConverterConfig config, WPTask taskMan) throws ParserConfigurationException, IOException {
-	this.config= config; 
+	this.config= config;
 	this.taskMan = taskMan;
 	this.builder = (DocumentBuilderFactory.newInstance()).newDocumentBuilder();
 	this.imageDirPath = config.getScratchPath().resolve("images");
@@ -74,9 +75,8 @@ public class DocConverter {
 	this.categoriesDir = config.watchPath.resolve("Categories");
     }
 
-    public String saveDoc(File docx, ArticleMeta options) throws IOException, ParserConfigurationException, SAXException, XPathException, TransformerFactoryConfigurationError, TransformerException {
+    public Map<String, Object> saveDoc(File docx, ArticleMeta options) throws IOException, ParserConfigurationException, SAXException, XPathException, TransformerFactoryConfigurationError, TransformerException {
 
-	final List<String> response = new LinkedList<String>();
 	final String docxName = docx.getName();
 	final String baseName = FilenameUtils.getBaseName(docxName);
 
@@ -84,6 +84,10 @@ public class DocConverter {
 
 	final File docParentPath = docx.getParentFile();
 	final Map<String, String> docImages = new HashMap<String, String>();
+	
+	final Map<String, Object> response = new HashMap<String, Object>();
+	
+	
 	final DocumentConverter mammothDc = new DocumentConverter()
 		.addStyleMap("r[style-name='Hyperlink'] =>")
 		.addStyleMap("r[style-name='Internet Link'] =>")
@@ -110,7 +114,7 @@ public class DocConverter {
 	final File htmlFile = new File(docParentPath, baseName + ".xhtml");
 
 	try {
-	    response.add("warnings: \t" + result.getWarnings().toString());
+	    response.put("warnings", result.getWarnings());
 
 	    final String xhtml = xhtmlWrapStart + result.getValue() + xhtmlWrapEnd;
 
@@ -121,6 +125,7 @@ public class DocConverter {
 
 		final Element titleElem = (Element) document.getElementsByTagName(convTitleTag).item(0);
 		this.title = titleElem.getTextContent();
+		response.put("ArticleTitle", title);
 		titleElem.getParentNode().removeChild(titleElem);
 
 		try (ByteArrayOutputStream htmIntermediatelOut = new ByteArrayOutputStream()) {
@@ -139,24 +144,25 @@ public class DocConverter {
 	    }
 
 	    final String pid = taskMan.postCreate(htmlFile, title, null, options);
-	    response.add("  posted with ID: " + pid);
+	    response.put("ArticleID", pid);
 
 	    final Optional<File> featuredImg = checkFeaturedImage(docx);
 
 	    if (featuredImg.isPresent()) {
-		response.add("Featured Image: " + taskMan.importFeaturedImage(featuredImg.get(), Long.parseLong(pid)));
+		response.put("FeaturedImage", taskMan.importFeaturedImage(featuredImg.get(), Long.parseLong(pid)));
 	    }
+	    response.put("ArticleURL", taskMan.getPostURL(pid));
 
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
-	return response.stream().collect(Collectors.joining("\n"));
+	return response;
 
     }
 
     private Optional<File> checkFeaturedImage(File docx) throws IOException {
 	final String imageTypes="tif,tiff,gif,jpeg,jpg,jif,jfif,jp2,jpx,j2k,j2c,fpx,pcd,png";
-	
+
 	File[] extraImages = docx.getParentFile().listFiles(new FileFilter() {
 	    @Override
 	    public boolean accept(File arg0) {

@@ -1,4 +1,4 @@
-package com.rasajournal;
+package com.rasajournal.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,7 +17,6 @@ public class Author {
     @JsonProperty(value = "display_name")
     private String displayName;
 
-    
     public String getId() {
         return id;
     }
@@ -41,7 +40,7 @@ public class Author {
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
-    
+
     @Override public String toString() {
 	return this.displayName;
     }
