@@ -9,9 +9,6 @@ import java.util.Date;
 
 public class ConverterConfig {
 
-    public static final String authorDataFile = "author.json";
-    public static final String categoryFileSuffix = "category.json";
-
     public static String scratchDirPath = "/tmp/docx/rasa";
     public final Path watchPath;
     public final Path platformPath;

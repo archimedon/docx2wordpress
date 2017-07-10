@@ -24,7 +24,7 @@ import com.rasajournal.entity.Category;
  */
 public class DocxConvSetup {
 
-    static final String authorDataFile = "author.json";
+    static final String authorDataFile = ".author.json";
     static final String categoryDataFile = "category.json";
     public static final String completedDataFilen = ".completed.json";
 
